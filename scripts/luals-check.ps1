@@ -95,7 +95,8 @@ if ($OutputMode -eq "Json") {
 
         $summary.files += 1
 
-        $decodedPath = [System.Uri]::UnescapeDataString($fileUri -replace "^file://", "")
+        $uriPath = ($fileUri -replace "^file://", "")
+        $decodedPath = [System.Uri]::UnescapeDataString($uriPath)
         foreach ($d in $fileDiagnostics) {
             $line = [int]$d.range.start.line + 1
             $col = [int]$d.range.start.character + 1
