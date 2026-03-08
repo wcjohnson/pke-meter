@@ -1,0 +1,18 @@
+{
+  "name": "pke-meter",
+  "version": "0.1.0",
+  "title": "PKE Meter",
+  "author": "The LORD thy GOD",
+  "contact": "https://github.com/wcjohnson/pke-meter",
+  "homepage": "https://github.com/wcjohnson/pke-meter",
+  "description": "Efficient event-driven construction ghost scanner and combinator.",
+  "factorio_version": "2.0",
+  "dependencies": [ "base >= 2.0.66", "0-things >= 0.2.3" ],
+  "package": {
+    "git_publish_branch": "main",
+    "ignore": [ "crowdin.yml", "stylua.toml", "tests/**", "doc/**" ],
+    "scripts": {
+    },
+    "sync_portal_details": true
+  }
+}
