@@ -1,0 +1,24 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "LuaLS: Check Workspace",
+      "type": "shell",
+      "command": "powershell",
+      "args": [
+        "-NoProfile",
+        "-ExecutionPolicy",
+        "Bypass",
+        "-File",
+        "${workspaceFolder}\\scripts\\luals-check.ps1",
+        "-WorkspacePath",
+        "${workspaceFolder}",
+        "-CheckLevel",
+        "Warning",
+        "-OutputMode",
+        "Agent"
+      ],
+      "problemMatcher": []
+    }
+  ]
+}

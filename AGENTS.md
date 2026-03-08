@@ -29,3 +29,14 @@ When proposing or implementing changes in this repository:
 - Preserve the no-polling / no-wide-scan design intent.
 - Reuse `lib/core` modules first; add new primitives only when existing ones are insufficient.
 - Keep behavior focused on per-network ghost accounting and circuit output correctness.
+- All functions that are exported or not called inline should have full LuaLS annotations for type checking purposes.
+
+## Audit Tooling
+- Repo audit script: `scripts/luals-check.ps1`
+- Purpose: run whole-repository LuaLS diagnostics and emit agent-friendly output lines.
+- Default output mode is `Agent`, which prints:
+	- `AGENT_DIAGNOSTIC|<Severity>|<Path>:<Line>:<Column>|<Code>|<Message>`
+	- `AGENT_SUMMARY|{"files":...,"diagnostics":...,"Error":...,"Warning":...,"Information":...,"Hint":...}`
+- For significant code changes, agents should run this audit before finalizing work:
+	- `powershell -NoProfile -ExecutionPolicy Bypass -File .\scripts\luals-check.ps1 -WorkspacePath . -CheckLevel Warning -OutputMode Agent`
+- If a strict gate is needed, agents can use `-FailOnDiagnostics` to return a failing exit code when diagnostics are present.
