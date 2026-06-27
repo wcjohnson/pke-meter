@@ -6,8 +6,8 @@
   "contact": "https://github.com/wcjohnson/pke-meter",
   "homepage": "https://github.com/wcjohnson/pke-meter",
   "description": "Efficient event-driven construction ghost scanner and combinator.",
-  "factorio_version": "2.0",
-  "dependencies": [ "base >= 2.0.66", "0-things >= 0.2.3" ],
+  "factorio_version": "2.1",
+  "dependencies": [ "base >= 2.1.7", "0-things >= 0.3.0" ],
   "package": {
     "git_publish_branch": "main",
     "ignore": [ "crowdin.yml", "stylua.toml", "tests/**", "doc/**" ],
