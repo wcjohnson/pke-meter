@@ -6,6 +6,8 @@ local things_registration = require("__0-things__.registration") --[[@as things.
 --------------------------------------------------------------------------------
 -- Combinator entity
 --------------------------------------------------------------------------------
+local sprite_path = "__pke-meter__/graphics/combinator.png"
+local icon_path = "__pke-meter__/graphics/combinator-icon.png"
 
 ---@type data.ConstantCombinatorPrototype
 local combinator = data_util.copy_prototype(
@@ -13,6 +15,13 @@ local combinator = data_util.copy_prototype(
 	"pke-meter-combinator"
 )
 combinator.minable = { mining_time = 0.5, result = "pke-meter-combinator" }
+---@diagnostic disable-next-line: need-check-nil
+combinator.sprites.east.layers[1].filename = sprite_path
+combinator.sprites.west.layers[1].filename = sprite_path
+---@diagnostic disable-next-line: need-check-nil
+combinator.sprites.north.layers[1].filename = sprite_path
+combinator.sprites.south.layers[1].filename = sprite_path
+combinator.icon = icon_path
 
 data:extend({
 	combinator,
@@ -39,6 +48,8 @@ local item = data_util.copy_prototype(
 	"pke-meter-combinator"
 )
 item.place_result = "pke-meter-combinator"
+item.stack_size = 10
+item.icon = icon_path
 
 data:extend({ item })
 
@@ -54,8 +65,8 @@ local recipe = {
 	enabled = false,
 	energy_required = 30,
 	ingredients = {
-		{ type = "item", name = "electronic-circuit", amount = 8 },
-		{ type = "item", name = "copper-cable", amount = 16 },
+		{ type = "item", name = "electronic-circuit", amount = 10 },
+		{ type = "item", name = "copper-cable", amount = 5 },
 	},
 	results = {
 		{ type = "item", name = "pke-meter-combinator", amount = 1 },
