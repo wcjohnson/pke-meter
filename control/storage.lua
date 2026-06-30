@@ -2,7 +2,8 @@ local events = require("lib.core.event")
 
 ---@class (exact) PkeMeter.Storage
 ---@field public combinators {[int64]: PkeMeter.Combinator}
----@field public surfaces {[int64]: PkeMeter.Surface}
+---@field public surfaces {[SurfaceIndex]: PkeMeter.Surface}
+---@field public ghost_surfaces {[UnitNumber]: SurfaceIndex}
 storage = {}
 
 local function init_storage_key(key, value)
@@ -13,6 +14,7 @@ end
 function _G.init_storage()
 	init_storage_key("combinators")
 	init_storage_key("surfaces")
+	init_storage_key("ghost_surfaces")
 end
 
 -- Initialize storage on startup
