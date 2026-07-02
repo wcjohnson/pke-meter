@@ -1,7 +1,7 @@
 ---@diagnostic disable: unresolved-require
 
 local data_util = require("lib.core.data-util")
-local things_registration = require("__0-things__.registration") --[[@as things.lib.Registration]]
+local things_registration = require("__0-things__.client.client") --[[@as things.client]]
 
 --------------------------------------------------------------------------------
 -- Combinator entity
