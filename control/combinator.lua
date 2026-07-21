@@ -1,7 +1,13 @@
 local class = require("lib.core.class").class
 local event = require("lib.core.event")
-local signal_lib = require("lib.core.signal")
 local strace = require("lib.core.strace")
+local signal_lib = require("lib.core.signal")
+---@diagnostic disable-next-line: unresolved-require
+local signal_numbers = require("__signal-numbers__.signal-numbers") --[[@as SignalNumbers.Lib]]
+
+local signal_to_number = signal_numbers.signal_to_number
+local exploded_signal_to_number = signal_numbers.exploded_signal_to_number
+local pairs = pairs
 
 local lib = {}
 
@@ -117,13 +123,10 @@ function Combinator:defer_update(level)
 end
 
 function Combinator:perform_deferred_update()
-	if self.deferred_update == 1 then
-		strace.trace(
-			"Combinator:perform_deferred_update: updating signals",
-			self.thing_id
-		)
+	local update_level = self.deferred_update
+	if update_level == 1 then
 		self:update_signals()
-	elseif self.deferred_update == 2 then
+	elseif update_level == 2 then
 		strace.trace(
 			"Combinator:perform_deferred_update: FULL UPDATE",
 			self.thing_id
@@ -151,6 +154,7 @@ function Combinator:update_ghosts()
 	end
 end
 
+-- XXX: MP SAFETY: Pure function of prototype data, should be MP safe.
 ---@type {[string]: ItemToPlace}
 local _itpt_cache = {}
 
@@ -178,7 +182,7 @@ function Combinator:update_signals()
 	if not surface then return end
 
 	-- Generate signals from the ghost_set
-	---@type SignalCounts
+	---@type table<SignalNumber, int32>
 	local signal_counts = {}
 	for unit_number, ghost in pairs(self.ghost_set) do
 		if not ghost.valid then
@@ -186,33 +190,31 @@ function Combinator:update_signals()
 			surface:remove_ghost_by_unit_number(unit_number)
 			goto continue
 		end
+		local ghost_type = ghost.type
 
-		if ghost.type == "entity-ghost" or ghost.type == "tile-ghost" then
-			-- TODO: cache items_to_place_this?
+		if ghost_type == "entity-ghost" or ghost_type == "tile-ghost" then
 			local quality = ghost.quality
 			local it = get_items_to_place_this(ghost)
 			if it then
-				local key = signal_lib.encode_signal_key(it.name, "item", quality)
-				signal_counts[key] = (signal_counts[key] or 0) + (it.count or 1)
+				local key = exploded_signal_to_number("item", it.name, quality)
+				if key then
+					signal_counts[key] = (signal_counts[key] or 0) + (it.count or 1)
+				end
 			end
-		elseif ghost.type == "item-request-proxy" then
+		elseif ghost_type == "item-request-proxy" then
 			for _, iqc in pairs(ghost.item_requests) do
-				local key = signal_lib.encode_signal_key(iqc.name, "item", iqc.quality)
-				signal_counts[key] = (signal_counts[key] or 0) + (iqc.count or 1)
+				local key = exploded_signal_to_number("item", iqc.name, iqc.quality)
+				if key then
+					signal_counts[key] = (signal_counts[key] or 0) + (iqc.count or 1)
+				end
 			end
 		end
 
 		::continue::
 	end
 
-	strace.trace(
-		"Combinator:update_signals: updating signals",
-		self.thing_id,
-		signal_counts
-	)
-
 	-- Send signals to the combinator's control behavior
-	local signals, counts = signal_lib.spread_signal_counts(signal_counts)
+	local signals, counts = signal_numbers.counts_to_signals_split(signal_counts)
 	signal_lib.apply_simple_cccb(behavior, signals, counts)
 end
 

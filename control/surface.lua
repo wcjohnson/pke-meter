@@ -5,6 +5,7 @@ local pos_lib = require("lib.core.math.pos")
 local strace = require("lib.core.strace")
 
 local pos_get = pos_lib.pos_get
+local pairs = pairs
 
 local lib = {}
 

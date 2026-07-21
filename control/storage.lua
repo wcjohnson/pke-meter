@@ -11,7 +11,7 @@ local function init_storage_key(key, value)
 	if storage[key] == nil then storage[key] = value end
 end
 
-function _G.init_storage()
+function init_storage()
 	init_storage_key("combinators")
 	init_storage_key("surfaces")
 	init_storage_key("ghost_surfaces")
